@@ -24,13 +24,13 @@
     }
     DropSelect.prototype={
         init:function(){
-           if(this.addHtml()) {
-               this.selectDropShow();
-               this.getlist(1,this.options.url);
-               this.search();
-               this.downScroll();
-               this.setWidth();
-           }
+            if(this.addHtml()) {
+                this.selectDropShow();
+                this.getlist(1,this.options.url);
+                this.search();
+                this.downScroll();
+                this.setWidth();
+            }
 
 
         },
@@ -101,7 +101,7 @@
                 }
                 $.each(data, function (i, val) {
                     var str = '<li><label><input type="checkbox" data-name="selectItem" data-type="minor" value="' + val[self.options.value] + '"></label>' +
-                            val[self.options.text] + ' </li>';
+                        val[self.options.text] + ' </li>';
                     $searchList.append(str)
 
                 })
@@ -206,9 +206,8 @@
             var $oul=$(this.$element).next().find('.search-list');
             var olis=$oul.find('li>label>input');
             $.each(olis,function(i,val){
-                console.log(value.indexOf(Number($(val).val())))
                 if(value.indexOf($(val).val())!=-1){
-                   $(val).prop('checked',true);
+                    $(val).prop('checked',true);
                     self.mutipleText.push($(val).parents('li').text());
                 }
             })
@@ -239,11 +238,11 @@
                 .on("compositionstart", function(){
                     $(this).prop("comStart", true);
                 }).on("compositionend", function(){
-                    $(this).prop("comStart", false);
-                });
+                $(this).prop("comStart", false);
+            });
         },
         selectValue:function(callBack){
-           callBack();
+            callBack();
         },
         callBack:function(callBack){
             typeof callback === "function"?callBack():''
@@ -295,7 +294,7 @@
         deleteArray:function(ary,ele){
             var index=ary.indexOf(ele);
             if(index!=-1){
-               ary=ary.splice(index,1)
+                ary=ary.splice(index,1)
             }
             return ary;
         },
@@ -305,7 +304,7 @@
                 if($.inArray(el, uniqueArr) === -1) uniqueArr.push(el);
             });
             return uniqueArr;
-    },
+        },
     }
     $.fn.mySelect=function(options){
         var dropSelect=new DropSelect(this,options);
