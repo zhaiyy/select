@@ -3,7 +3,7 @@ select paging, select multiple,select search
 
 example
 
-$('#publish_select').mySelect({
+    $('#publish_select').mySelect({
        'url':'/api/pub_info',
        'width':'200px',
        'text':'name',
@@ -17,4 +17,4 @@ $('#publish_select').mySelect({
            flag2 = true;
            flag1&&flag2&&flag3 ? self.loading(false):'';
        }
-})
+    })
