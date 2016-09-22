@@ -9,6 +9,7 @@
         this.defaults={
             'url':'',//设置加载的url
             'all':false,//是否显示all 选项，显示并设置其{value：value}
+            'allName':'all',
             'width':'200px',
             'text':'name',
             'value':'id',
@@ -17,20 +18,20 @@
             'selectValue':'',//进行外部的value 赋值
             'callBack':'',
             'pageCount':20,//设置每次加载的条数 int
-            'isMutiple':true
+            'isMutiple':false
         };
         this.page_no=1;
         this.options= $.extend({},this.defaults,opt)
     }
     DropSelect.prototype={
         init:function(){
-            if(this.addHtml()) {
-                this.selectDropShow();
-                this.getlist(1,this.options.url);
-                this.search();
-                this.downScroll();
-                this.setWidth();
-            }
+           if(this.addHtml()) {
+               this.selectDropShow();
+               this.getlist(1,this.options.url);
+               this.search();
+               this.downScroll();
+               this.setWidth();
+           }
 
 
         },
@@ -80,7 +81,7 @@
             var self=this;
             if(!self.options.isMutiple) {
                 if (self.options.all && self.page_no == 1 && $(self.parent).find('.search-input>input').val().length == 0) {
-                    var str = '<li data-id="' + self.options.all.value + '">all </li>';
+                    var str = '<li data-id="' + self.options.all.value + '">'+self.options.allName+'</li>';
                     $searchList.append(str)
                 }
                 $.each(data, function (i, val) {
@@ -101,7 +102,7 @@
                 }
                 $.each(data, function (i, val) {
                     var str = '<li><label><input type="checkbox" data-name="selectItem" data-type="minor" value="' + val[self.options.value] + '"></label>' +
-                        val[self.options.text] + ' </li>';
+                            val[self.options.text] + ' </li>';
                     $searchList.append(str)
 
                 })
@@ -109,7 +110,7 @@
                 this.getMutipleValue()
             }
         },
-        getlist:function(page_no,url,filter_name){
+        getlist:function(page_no,url,filter_name,isSearch){
             var obj={};
             obj.page_no=page_no;
             this.page_no=page_no;
@@ -119,11 +120,12 @@
             $.ajax({
                 url: url,
                 data:obj,
-                type: 'get',
+                type: 'post',
                 dataType: 'json',
                 success:function(data){
-                    self.appendList(data.data[0]);
-                    self.dataTotal=data.data[1];
+                    if(isSearch)$(self.parent).find('.search-list').html('');
+                    self.appendList(data.data);
+                    self.dataTotal=data.total_count;
                     self.callBack(self.options.callBack())
                 }
             })
@@ -207,7 +209,7 @@
             var olis=$oul.find('li>label>input');
             $.each(olis,function(i,val){
                 if(value.indexOf($(val).val())!=-1){
-                    $(val).prop('checked',true);
+                   $(val).prop('checked',true);
                     self.mutipleText.push($(val).parents('li').text());
                 }
             })
@@ -232,17 +234,17 @@
             var lazyLayout = self.debounce(function (){
                 if ($(this).prop("comStart")) return;
                 $(self.parent).find('.search-list').html('')
-                self.getlist(1,self.options.url,$(this).val());
+                self.getlist(1,self.options.url,$(this).val(),true);
             },300);
             $(self.parent).find('.search-input>input').on('input',lazyLayout)
                 .on("compositionstart", function(){
                     $(this).prop("comStart", true);
                 }).on("compositionend", function(){
-                $(this).prop("comStart", false);
-            });
+                    $(this).prop("comStart", false);
+                });
         },
         selectValue:function(callBack){
-            callBack();
+           callBack();
         },
         callBack:function(callBack){
             typeof callback === "function"?callBack():''
@@ -294,7 +296,7 @@
         deleteArray:function(ary,ele){
             var index=ary.indexOf(ele);
             if(index!=-1){
-                ary=ary.splice(index,1)
+               ary=ary.splice(index,1)
             }
             return ary;
         },
