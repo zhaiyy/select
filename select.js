@@ -7,7 +7,13 @@
         var self=this;
         this.$element=ele;
         this.defaults={
-            'url':'',//设置加载的url
+            $ajax:{
+                'url':'',//设置加载的url
+                'type':'get',
+                'data':{'page_no':'page_no','page_count':'page_count','filter_name':'filter_name'},
+                'postData':{},
+                'success':{'data_list':'data','total_count':'total_count'}
+            },
             'all':false,//是否显示all 选项，显示并设置其{value：value}
             'allName':'all',
             'width':'200px',
@@ -27,7 +33,7 @@
         init:function(){
            if(this.addHtml()) {
                this.selectDropShow();
-               this.getlist(1,this.options.url);
+               this.getlist(1);
                this.search();
                this.downScroll();
                this.setWidth();
@@ -110,22 +116,29 @@
                 this.getMutipleValue()
             }
         },
-        getlist:function(page_no,url,filter_name,isSearch){
+        getlist:function(page_no,filter_name,isSearch){
             var obj={};
-            obj.page_no=page_no;
-            this.page_no=page_no;
-            obj.page_count=this.options.pageCount;
-            obj.filter_name=filter_name
             var self=this;
+            var postData=self.options.$ajax.postData;
+            obj[self.options.$ajax.data.page_no]=page_no;
+            this.page_no=page_no;
+            obj[self.options.$ajax.data.page_count]=this.options.pageCount;
+            obj[self.options.$ajax.data.filter_name]=filter_name;
+            if(postData){
+                for(var key in postData){
+                    obj[key]=postData[key]
+                }
+
+            }
             $.ajax({
-                url: url,
+                url: self.options.$ajax.url,
                 data:obj,
-                type: 'post',
+                type: self.options.$ajax.type,
                 dataType: 'json',
                 success:function(data){
                     if(isSearch)$(self.parent).find('.search-list').html('');
-                    self.appendList(data.data);
-                    self.dataTotal=data.total_count;
+                    self.appendList(data[self.options.$ajax.success.data_list]);
+                    self.dataTotal=data[self.options.$ajax.success.total_count];
                     self.callBack(self.options.callBack())
                 }
             })
@@ -234,7 +247,7 @@
             var lazyLayout = self.debounce(function (){
                 if ($(this).prop("comStart")) return;
                 $(self.parent).find('.search-list').html('')
-                self.getlist(1,self.options.url,$(this).val(),true);
+                self.getlist(1,$(this).val(),true);
             },300);
             $(self.parent).find('.search-input>input').on('input',lazyLayout)
                 .on("compositionstart", function(){
@@ -257,7 +270,7 @@
                 var windowHeight = $(this).height()+10;
                 if(scrollTop + windowHeight >= scrollHeight && self.dataTotal>self.options.pageCount&&self.dataTotal>self.page_no*self.options.pageCount){
                     self.page_no++;
-                    self.getlist(self.page_no,self.options.url,$(self.parent).find('.search-input>input').val());
+                    self.getlist(self.page_no,$(self.parent).find('.search-input>input').val());
                 }
             },100);
             $(self.parent).find('.search-list').bind('scroll',lazyLayout);
