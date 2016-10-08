@@ -1,0 +1,82 @@
+div,ul,li,span,input{
+    margin: 0px;
+    padding: 0px;
+}
+.select-box {
+    position: relative;
+    display: inline-block;
+}
+.selet-label{
+    top: -10px;
+    position: relative;
+}
+.select-container{
+    position: relative;
+    width: 200px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-right: 30px;
+    padding-left: 15px;
+}
+.select-container .select-arrow{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 30px;
+    background: url('../images/select.png') left 2px no-repeat;
+}
+.select-container .select-down{
+    background: url('../images/select.png') -18px 2px no-repeat;
+}
+.select-drop{
+    display: none;
+    width: 200px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 100;
+    background-color: #fff;
+}
+
+.search-list{
+    width: 100%;
+    max-height: 200px;
+    overflow: auto;
+    list-style: none;
+    padding: 10px;
+    padding-top: 0px;
+}
+.search-list li{
+    padding: 3px 0px;
+    line-height: 20px;
+    cursor:pointer;
+}
+.search-input{
+    display: inline-block;
+    margin: 0;
+    min-height: 26px;
+    padding: 4px;
+    white-space: nowrap;
+    z-index: 10000;
+    background-color: white;
+}
+.search-input input{
+    width: 100%;
+    height: 25px;
+    background: url('../images/select.png')  no-repeat;
+    background-position: 98% -24px;
+}
+.select-bg{
+    background-color: #1E90FF;
+    color: white;
+}
+.show{
+    display: block;
+    background-color: red;
+}
