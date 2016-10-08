@@ -21,7 +21,8 @@
             'value':'id',
             'setValue':'',//传递id,设置默认值
             'setMutipleValue':['-1'],//传递id,设置默认值
-            'selectValue':'',//进行外部的value 赋值
+            'selectValue':'',//进行外部的value 赋值,
+            'filterValue':'',//{filter_name:'offer_type',filter_value:[2],filter_type:false}
             'callBack':'',
             'pageCount':20,//设置每次加载的条数 int
             'isMutiple':false
@@ -91,7 +92,18 @@
                     $searchList.append(str)
                 }
                 $.each(data, function (i, val) {
-                    var str = '<li data-id="' + val[self.options.value] + '">' + val[self.options.text] + ' </li>';
+                    if(self.options.filterValue!=''){
+                        if(self.options.filterValue.filter_type&&self.options.filterValue.filter_value.indexOf(val[self.options.filterValue.filter_name])!=-1){
+                            var str = '<li data-id="' + val[self.options.value] + '">' + val[self.options.text] + ' </li>';
+
+                        }else if(!self.options.filterValue.filter_type&&self.options.filterValue.filter_value.indexOf(val[self.options.filterValue.filter_name])==-1) {
+
+                            var str = '<li data-id="' + val[self.options.value] + '">' + val[self.options.text] + ' </li>';
+                        }
+                    }else{
+                        var str = '<li data-id="' + val[self.options.value] + '">' + val[self.options.text] + ' </li>';
+                    }
+
                     $searchList.append(str)
                 })
                 var selectid = $(self.parent).find('.select-text').attr('data-id');
@@ -107,8 +119,20 @@
                     $searchList.append(str)
                 }
                 $.each(data, function (i, val) {
-                    var str = '<li><label><input type="checkbox" data-name="selectItem" data-type="minor" value="' + val[self.options.value] + '"></label>' +
+                    if(self.options.filterValue!=''){
+
+                        if(self.options.filterValue.filter_type&&self.options.filterValue.filter_value.indexOf(val[self.options.filterValue.filter_name])!=-1){
+                            var str = '<li><label><input type="checkbox" data-name="selectItem" data-type="minor" value="' + val[self.options.value] + '"></label>' +
+                                val[self.options.text] + ' </li>';
+                        }else if(!self.options.filterValue.filter_type&&self.options.filterValue.filter_value.indexOf(val[self.options.filterValue.filter_name])==-1) {
+                            var str = '<li><label><input type="checkbox" data-name="selectItem" data-type="minor" value="' + val[self.options.value] + '"></label>' +
+                                val[self.options.text] + ' </li>';
+                        }
+                    }else {
+                        var str = '<li><label><input type="checkbox" data-name="selectItem" data-type="minor" value="' + val[self.options.value] + '"></label>' +
                             val[self.options.text] + ' </li>';
+                    }
+
                     $searchList.append(str)
 
                 })
