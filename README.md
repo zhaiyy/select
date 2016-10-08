@@ -3,18 +3,21 @@ select paging, select multiple,select search
 
 example
 
-    $('#publish_select').mySelect({
-       'url':'/api/pub_info',
-       'width':'200px',
-       'text':'name',
-       'value':'id',
-       'all':{value:-1},
-       'setValue':-1,
-       'selectValue':function(){
-           self.form.publisher_id($('#publish_select').attr('data-value'))
-       },
-       'callBack':function(){
-           flag2 = true;
-           flag1&&flag2&&flag3 ? self.loading(false):'';
-       }
+   
+    $('#offer_select').mySelect({
+        $ajax:{
+            'url':'/admin/offer/get_all_offer_info_pages',
+            'type':'post',
+            'data':{'page_no':'page_no','page_count':'page_count','filter_name':'filter_name'},
+            'success':{'data_list':'data','total_count':'total_count'}
+        },
+        'width':'340px',
+        'text':'offer_info_name',
+        'value':'offer_id',
+        'all':{value:0},
+        'allName':'All Offers',
+        'setValue':0,
+        'filterValue':{filter_name:'offer_type',filter_value:[2],filter_type:false},
+        'selectValue':function(){edit_group.data.offer_id($('#offer_select').attr('value'))},
+        'callBack':function () {edit_group.loading(false)}
     })
